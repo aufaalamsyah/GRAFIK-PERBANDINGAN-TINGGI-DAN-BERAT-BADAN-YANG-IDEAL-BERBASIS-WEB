@@ -1,0 +1,217 @@
+html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalkulator BMI</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: pacifico, cursive;
+            background: linear-gradient(135deg, #f5edf0, #dcbddf, #9a99e0, #008bd0);
+            text-align: center;
+        }
+        .container {
+            width: 335px;
+            margin: 150px auto;
+            background: linear-gradient(135deg, #008bd0, #9a99e0, #dcbddf, #f5edf0);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px 
+        }
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+        }
+        button {
+            background: #201c57
+            color: rgb(255, 255, 255);
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #201c57;
+        }
+        .hidden {
+            display: none;
+        }
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #201c57;
+            padding: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="slide1">
+    <h2>SELAMAT DATANG DI WEBSITE KAMI</h2>
+    <p>Masukkan data Anda untuk mengetahui apakah berat badan Anda sudah ideal atau belum berdasarkan perhitungan Body Mass Index (BMI).</p>
+    <button onclick="keSlide2()">Mulai</button>
+</div>
+
+<div class="container hidden" id="slide2">
+    <h2>✨MASUKAN DATA✨</h2>
+    <input type="number" id="bb" placeholder="Berat badan (kg)">
+    <input type="number" id="tb" placeholder="Tinggi badan (cm)">
+    <button onclick="hitungBMI()">Kirim</button>
+</div>
+
+<div class="container hidden" id="slide3">
+    <h2>🎉HASIL PERHITUNGAN BMI🎉</h2>
+    <p id="hasilBMI"></p>
+    <p id="kategoriBMI"></p>
+
+
+    <h3>🎊GRAFIK PERBANDINGAN BMI🎊</h3>
+    <canvas id="bmiChart" width="300" height="200"></canvas>
+
+    <br>
+    <button onclick="keSlide4()">Cara Menghitung BMI</button>
+    <button onclick="keSlide5()">Tips Menjaga Berat Badan</button>
+    <button onclick="hitungUlang()">Hitung Ulang</button>
+</div>
+
+<div class="container hidden" id="slide4">
+    <h2>🎀CARA HITUNG BMI🎀</h2>
+
+
+    <p><b>🪄Ubah tinggi badan ke meter🪄</b></p>
+    <p>Tinggi (m) = Tinggi (cm) ÷ 100</p>
+    
+    <p><b>🧸RUMUS BMI‼🧸</b></p>
+    <p>BMI = Berat Badan (kg) ÷ (Tinggi (m) × Tinggi (m))</p>
+
+    <h3>‼️PATOKAN BMI‼️</h3>
+    <table>
+        <tr><th>Nilai BMI</th><th>Kategori</th></tr>
+        <tr><td>&lt; 18,5</td><td>Berat badan kurang</td></tr>
+        <tr><td>18,5 – 22,9</td><td>Berat badan ideal</td></tr>
+        <tr><td>≥ 23</td><td>Kelebihan berat badan</td></tr>
+    </table>
+
+    <br>
+    <button onclick="kembaliKeHasil()">Kembali ke Hasil</button>
+</div>
+
+<div class="container hidden" id="slide5">
+    <h2>✨TIPS MENJAGA BERAT✨</h2>
+    <h2>✨BADAN IDEAL✨</h2>
+
+    <p><b>1. Perhatikan Porsi Makanan</b></p>
+    <p>Jika berat badan sudah melebihi angka normal, perhatikan porsi makanan. Kurangi gorengan, kue, roti, daging berlemak, makanan dan minuman manis.</p>
+
+    <p><b>2. Makan Sayur dan Buah</b></p>
+    <p>Cukupkan asupan serat dari sayur dan buah tanpa tambahan pemanis buatan.</p>
+
+    <p><b>3. Banyak Minum Air Mineral</b></p>
+    <p>Kurangi minuman manis. Minum air mineral sebelum dan saat makan dapat membantu meningkatkan rasa kenyang.</p>
+
+    <p><b>4. Olahraga</b></p>
+    <p>Lakukan olahraga kardio seperti lari, squat jump, lompat tali serta latihan kekuatan seperti push up, angkat beban, dan plank.</p>
+
+    <p><b>5. Tidur Teratur</b></p>
+    <p>Tidur cukup dan berkualitas penting karena kurang tidur dapat meningkatkan nafsu makan dan risiko kenaikan berat badan.</p>
+
+    <br>
+    <button onclick="kembaliKeHasilDariTips()">Kembali ke Hasil</button>
+</div>
+
+<script>
+let chartBMI;
+
+function keSlide2() {
+    slide1.classList.add("hidden");
+    slide2.classList.remove("hidden");
+}
+
+function hitungBMI() {
+    let bb = parseFloat(document.getElementById("bb").value);
+    let tbCm = parseFloat(document.getElementById("tb").value);
+
+    if (!bb || !tbCm) {
+        alert("Mohon isi berat dan tinggi badan!");
+        return;
+    }
+
+    let tbM = tbCm / 100;
+    let bmi = bb / (tbM * tbM);
+    bmi = bmi.toFixed(1);
+
+    let kategori = "";
+    if (bmi < 18.5) {
+        kategori = "Berat badan kurang";
+    } else if (bmi <= 22.9) {
+        kategori = "Berat badan ideal";
+    } else {
+        kategori = "Kelebihan berat badan";
+    }
+
+    document.getElementById("hasilBMI").innerHTML = "BMI kamu: <b>" + bmi + "</b>";
+    document.getElementById("kategoriBMI").innerHTML = "Kategori: <b>" + kategori + "</b>";
+
+    slide2.classList.add("hidden");
+    slide3.classList.remove("hidden");
+
+    tampilkanGrafik(bmi);
+}
+
+function tampilkanGrafik(bmi) {
+    let ctx = document.getElementById("bmiChart").getContext("2d");
+
+    if (chartBMI) chartBMI.destroy();
+
+    chartBMI = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['BMI Kamu', 'Batas Ideal'],
+            datasets: [{
+                label: 'Perbandingan BMI',
+                data: [bmi, 22.9],
+                backgroundColor: ['#4CAF50', '#2196F3']
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+function keSlide4() {
+    slide3.classList.add("hidden");
+    slide4.classList.remove("hidden");
+}
+
+function kembaliKeHasil() {
+    slide4.classList.add("hidden");
+    slide3.classList.remove("hidden");
+}
+
+function keSlide5() {
+    slide3.classList.add("hidden");
+    slide5.classList.remove("hidden");
+}
+
+function kembaliKeHasilDariTips() {
+    slide5.classList.add("hidden");
+    slide3.classList.remove("hidden");
+}
+
+function hitungUlang() {
+    slide3.classList.add("hidden");
+    slide2.classList.remove("hidden");
+    document.getElementById("bb").value = "";
+    document.getElementById("tb").value = "";
+}
+</script>
+
+</body>
+</html>
