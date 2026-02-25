@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalkulator BMI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="container" id="slide1">
+    <h2>SELAMAT DATANG DI WEBSITE KAMI</h2>
+    <p>Masukkan data Anda untuk mengetahui apakah berat badan Anda sudah ideal atau belum.</p>
+    <button onclick="keSlide2()">Mulai</button>
+</div>
+
+<div class="container hidden" id="slide2">
+    <h2>MASUKKAN DATA</h2>
+    <input type="number" id="bb" placeholder="Berat badan (kg)">
+    <input type="number" id="tb" placeholder="Tinggi badan (cm)">
+    <button onclick="hitungBMI()">Kirim</button>
+</div>
+
+<div class="container hidden" id="slide3">
+    <h2>HASIL BMI</h2>
+    <p id="hasilBMI"></p>
+    <p id="kategoriBMI"></p>
+    <canvas id="bmiChart"></canvas>
+    <button onclick="hitungUlang()">Hitung Ulang</button>
+</div>
+
+<script src="assets/js/script.js"></script>
+</body>
+</html>
